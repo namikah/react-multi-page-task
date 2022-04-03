@@ -1,0 +1,22 @@
+.panel{
+    background-image: url("https://picsum.photos/id/456/1200/600");
+    background-size: cover;
+    height: 300px;
+    position: relative;
+}
+
+.panel::after{
+position: absolute;
+width: 100%;
+height: 100%;
+background-color: black;
+color: black;
+left: 0;
+top: 0;
+right: 0;
+z-index: 999999999;
+}
+
+h3, link{
+    color: white;
+}
