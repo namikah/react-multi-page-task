@@ -1,10 +1,14 @@
-import React from 'react'
-import Slider from '../../components/slider/Slider'
+import React from "react";
+import Slider from "../../components/slider/Slider";
+import Todos from "../../components/todos/Todos";
 
 function Home() {
   return (
-  <Slider/>
-  )
+    <>
+      <Slider />
+      <Todos />
+    </>
+  );
 }
 
-export default Home
+export default Home;
