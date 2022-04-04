@@ -1,7 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./products.css";
-import { INITIAL_ASYNC_VALUES } from "../../Constants/consts";
-import { createBrowserHistory } from "history";
 import {
   Button,
   Card,
@@ -11,30 +9,46 @@ import {
   CardSubtitle,
   CardText,
   CardTitle,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
 } from "reactstrap";
 import axios from "axios";
 import Banner from "../../components/layouts/banner/Banner";
-import { useHistory } from "react-router-dom";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { range } from "range";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function Products() {
   const [productsData, setProductsData] = useState();
-  const { push } = useHistory();
-  const {pathname} = useLocation();
+  const [curPage, setCurPage] = useState(1);
+  const history = useHistory();
 
-
-  const getData = useCallback(() => {
+  const getData = useCallback((page) => {
     axios
-      .get("https://reqres.in/api/products/?page=1&per_page=4")
+      .get(`https://reqres.in/api/products/?page=${page}&per_page=4`)
       .then((res) => {
         setProductsData(res.data);
       });
   }, []);
 
   useEffect(() => {
-    getData();
-  }, []);
+    getData(curPage);
+  }, [getData, curPage]);
 
+  const handlePageChange=React.useCallback((ev)=>{
+    const val = ev.target.value
+    console.log(val);
+    history.push(`?page=${val}`)
+    setCurPage(val)
+    },[history])
+
+  const maxPageCount = React.useMemo(
+    () => !!productsData && productsData.total_pages,
+    [productsData]
+  );
+
+  console.log(productsData);
+  console.log(maxPageCount);
   return (
     <div className="container mt-3 mb-5">
       <Banner body="/products" title="Products" />
@@ -65,6 +79,28 @@ function Products() {
           </Card>
         ))}
       </CardGroup>
+      <div className="d-flex justify-content-center mt-5">
+        <Pagination>
+          <PaginationItem>
+            <PaginationLink first href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" previous />
+          </PaginationItem>
+          {!!maxPageCount &&
+            range(1, maxPageCount + 1).map((i) => (
+              <PaginationItem key={i}>
+                <PaginationLink value={i} onClick={handlePageChange}>{i}</PaginationLink>
+              </PaginationItem>
+            ))}
+          <PaginationItem>
+            <PaginationLink href="#" next />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" last />
+          </PaginationItem>
+        </Pagination>
+      </div>
     </div>
   );
 }
