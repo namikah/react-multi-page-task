@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./products.css";
+import { INITIAL_ASYNC_VALUES } from "../../Constants/consts";
+import { createBrowserHistory } from "history";
 import {
   Button,
   Card,
@@ -10,33 +12,33 @@ import {
   CardText,
   CardTitle,
 } from "reactstrap";
-import Banner from "../../components/layouts/banner/Banner";
-import { productService } from "../../API/services/productService";
-import { INITIAL_ASYNC_VALUES } from "../../Constants/consts";
-import { createBrowserHistory } from "history";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
-
+import Banner from "../../components/layouts/banner/Banner";
+import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 function Products() {
-  const [productsData, setProductsData]=useState()
+  const [productsData, setProductsData] = useState();
+  const { push } = useHistory();
+  const {pathname} = useLocation();
 
-    const getData = useCallback(()=>{
-      axios.get("https://reqres.in/api/products/?page=1&per_page=4").then((res)=>{
-        setProductsData(res.data)
-      })
-    },[])
 
-    useEffect(()=>{
-      getData();
-    },[])
+  const getData = useCallback(() => {
+    axios
+      .get("https://reqres.in/api/products/?page=1&per_page=4")
+      .then((res) => {
+        setProductsData(res.data);
+      });
+  }, []);
 
-  console.log(productsData?.data);
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
-    <div className="container mt-3">
+    <div className="container mt-3 mb-5">
       <Banner body="/products" title="Products" />
-      <CardGroup>
+      <CardGroup className="gap-3">
         {productsData?.data.map((item) => (
           <Card key={item.id}>
             <CardImg
@@ -51,7 +53,14 @@ function Products() {
                 Year: {item.year}
               </CardSubtitle>
               <CardText>Pantom Value: {item.pantone_value}</CardText>
-              <Button style={{ backgroundColor: item.color }}>Button</Button>
+              <Button
+                style={{ backgroundColor: item.color }}
+                // onClick={() => {
+                //   push(pathname + "/?page=2&per_page=4");
+                // }}
+              >
+                Button
+              </Button>
             </CardBody>
           </Card>
         ))}
