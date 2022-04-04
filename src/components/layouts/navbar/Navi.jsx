@@ -17,6 +17,11 @@ function Navi() {
               Products
             </NavLink>
           </NavItem>
+          <NavItem>
+            <NavLink to={"/users"} className="nav-link">
+              Users
+            </NavLink>
+          </NavItem>
         </Nav>
       </div>
     </Navbar>

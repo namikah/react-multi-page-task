@@ -1,6 +1,7 @@
 export const ROUTES_PATH={
     HOME:"/",
-    PRODUCTS:"/products"
+    PRODUCTS:"/products",
+    USERS:"/users"
 }
 export const INITIAL_ASYNC_VALUES={
     data:undefined,

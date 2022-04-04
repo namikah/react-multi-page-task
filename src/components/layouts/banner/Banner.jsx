@@ -9,7 +9,7 @@ function Banner({body, title}) {
         <div className="panel-heading">
           <h3 className="panel-title">{title}</h3>
         </div>
-        <Link className="panel-body" to={"/products"}>{body}</Link>
+        <Link className="panel-body" to={body}>{body}</Link>
       </div>
     </div>
   );
