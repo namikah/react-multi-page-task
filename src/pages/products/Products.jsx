@@ -35,20 +35,42 @@ function Products() {
     getData(curPage);
   }, [getData, curPage]);
 
-  const handlePageChange=React.useCallback((ev)=>{
-    const val = ev.target.value
-    console.log(val);
-    history.push(`?page=${val}`)
-    setCurPage(val)
-    },[history])
+  const handlePageChange = React.useCallback(
+    (ev) => {
+      const val = ev.target.value;
+      history.push(`?page=${val}`);
+      setCurPage(val);
+    },
+    [history]
+  );
+
+  const handlePagePrev = React.useCallback(
+    (curPage) => {
+      const prevPage = curPage - 1;
+      if (prevPage >= 1) {
+        history.push(`?page=${prevPage}`);
+        setCurPage(prevPage);
+      }
+    },
+    [history]
+  );
+
+  const handlePageNext = React.useCallback(
+    (curPage) => {
+      const nextPage = Math.ceil(curPage) + 1;
+      if (nextPage <= maxPageCount) {
+        history.push(`?page=${nextPage}`);
+        setCurPage(nextPage);
+      }
+    },
+    [history]
+  );
 
   const maxPageCount = React.useMemo(
     () => !!productsData && productsData.total_pages,
     [productsData]
   );
 
-  console.log(productsData);
-  console.log(maxPageCount);
   return (
     <div className="container mt-3 mb-5">
       <Banner body="/products" title="Products" />
@@ -67,14 +89,7 @@ function Products() {
                 Year: {item.year}
               </CardSubtitle>
               <CardText>Pantom Value: {item.pantone_value}</CardText>
-              <Button
-                style={{ backgroundColor: item.color }}
-                // onClick={() => {
-                //   push(pathname + "/?page=2&per_page=4");
-                // }}
-              >
-                Button
-              </Button>
+              <Button style={{ backgroundColor: item.color }}>Button</Button>
             </CardBody>
           </Card>
         ))}
@@ -82,22 +97,18 @@ function Products() {
       <div className="d-flex justify-content-center mt-5">
         <Pagination>
           <PaginationItem>
-            <PaginationLink first href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" previous />
+            <PaginationLink onClick={() => handlePagePrev(curPage)} previous />
           </PaginationItem>
           {!!maxPageCount &&
             range(1, maxPageCount + 1).map((i) => (
               <PaginationItem key={i}>
-                <PaginationLink value={i} onClick={handlePageChange}>{i}</PaginationLink>
+                <PaginationLink value={i} onClick={handlePageChange}>
+                  {i}
+                </PaginationLink>
               </PaginationItem>
             ))}
           <PaginationItem>
-            <PaginationLink href="#" next />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" last />
+            <PaginationLink onClick={() => handlePageNext(curPage)} next />
           </PaginationItem>
         </Pagination>
       </div>
