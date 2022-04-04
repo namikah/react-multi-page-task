@@ -55,21 +55,23 @@ function Products() {
     [history]
   );
 
+ const maxPageCount = React.useMemo(
+    () => !!productsData && productsData.total_pages,
+    [productsData]
+  );
+  
   const handlePageNext = React.useCallback(
     (curPage) => {
-      const nextPage = Math.ceil(curPage) + 1;
+      const nextPage = Math.round(curPage) + 1;
       if (nextPage <= maxPageCount) {
         history.push(`?page=${nextPage}`);
         setCurPage(nextPage);
       }
     },
-    [history]
+    [history,maxPageCount]
   );
 
-  const maxPageCount = React.useMemo(
-    () => !!productsData && productsData.total_pages,
-    [productsData]
-  );
+ 
 
   return (
     <div className="container mt-3 mb-5">
